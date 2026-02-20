@@ -22,6 +22,7 @@ export type { UsePreferencesReturn } from './use-preferences'
 // Onboarding
 export { useOnboarding } from './use-onboarding'
 export type { UseOnboardingReturn } from './use-onboarding'
+export { useOnboardingRedirect } from './use-onboarding-redirect'
 
 // Existing
 export { useIsMobile } from './use-mobile'
