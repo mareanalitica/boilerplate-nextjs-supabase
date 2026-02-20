@@ -9,16 +9,19 @@ ARG NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 
+# Force development during install so devDependencies are included (Next.js, TypeScript, etc.)
+ENV NODE_ENV=development
+
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
+# Install dependencies (including devDependencies needed for next build)
 RUN npm ci
 
 # Copy source code
 COPY . .
 
-# Build the application
+# Build the application (NODE_ENV will be set to production in the runtime stage)
 RUN npm run build
 
 # Stage 2: Runtime
