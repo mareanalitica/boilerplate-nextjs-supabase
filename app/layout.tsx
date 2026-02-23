@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+import { AppProvider } from "@/lib/state/context/app-provider";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -9,8 +9,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Boilerplate v1",
-  description: "A maneira mais simples de iniciar seu negócio",
+  title: "SaaS Minimal",
+  description: "A professional SaaS boilerplate with RBAC, multi-tenant, and onboarding",
 };
 
 const geistSans = Geist({
@@ -27,14 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <AppProvider>
           {children}
-        </ThemeProvider>
+        </AppProvider>
       </body>
     </html>
   );

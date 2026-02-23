@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+
+      "Bash(git:*)",
+
+      "Bash(npm:*)",
+      "Bash(npx:*)",
+      "Bash(pip:*)",
+      "Bash(pytest:*)",
+      "Bash(dotnet:*)",
+      "Bash(mvn:*)",
+      "Bash(go:*)",
+
+      "Bash(make:*)",
+      "Bash(tsc:*)",
+
+      "Bash(docker:*)",
+
+      "Bash(terraform:*)",
+      "Bash(kubectl:*)",
+
+      "Bash(curl:*)",
+
+      "Bash(cp:*)",
+      "Bash(mv:*)",
+      "Bash(mkdir:*)"
+    ]
+  }
+}
