@@ -10,7 +10,6 @@ import { ThemeProvider } from 'next-themes'
 import { createBrowserClient } from '@supabase/ssr'
 import { useAuthStore, AuthUser, JWTClaims } from '@/lib/stores/auth-store'
 import { useOrganizationStore } from '@/lib/stores/organization-store'
-import { getOrganizationService } from '@/lib/services'
 
 function StoreInitializer() {
   const { setUser, setAuthenticated, setLoading, setClaims, logout, userId } =
@@ -106,14 +105,18 @@ function StoreInitializer() {
     const loadOrganizations = async () => {
       try {
         setOrgLoading(true)
-        const orgService = getOrganizationService()
-        const orgs = await orgService.getUserOrganizations(userId)
+        const response = await fetch('/api/organizations')
 
-        setOrganizationsList(orgs)
+        if (!response.ok) {
+          throw new Error('Failed to fetch organizations')
+        }
+
+        const { organizations } = await response.json()
+        setOrganizationsList(organizations || [])
 
         // Set first organization as current with appropriate role
-        if (orgs.length > 0) {
-          const firstOrg = orgs[0]
+        if (organizations && organizations.length > 0) {
+          const firstOrg = organizations[0]
           // User is admin if they're the owner
           const role = firstOrg.owner_id === userId ? 'admin' : 'member'
           setCurrentOrganization(firstOrg, role)
