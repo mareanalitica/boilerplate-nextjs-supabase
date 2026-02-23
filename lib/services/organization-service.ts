@@ -5,7 +5,7 @@
 
 import { BaseService, ValidationResult, ValidationError } from './base-service'
 import { OrganizationRepository } from '../repositories/organization-repository'
-import { Organization } from '../state/types/organization-state'
+import type { Organization } from '../stores/organization-store'
 import { OrganizationValidator } from '../validators/organization-validator'
 
 export class OrganizationService extends BaseService<Organization> {

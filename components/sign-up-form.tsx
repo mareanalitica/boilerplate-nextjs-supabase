@@ -20,6 +20,8 @@ export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [fullName, setFullName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -33,8 +35,20 @@ export function SignUpForm({
     setIsLoading(true);
     setError(null);
 
+    if (fullName.trim().length < 2) {
+      setError("Nome deve ter pelo menos 2 caracteres");
+      setIsLoading(false);
+      return;
+    }
+
+    if (companyName.trim().length < 2) {
+      setError("Nome da empresa deve ter pelo menos 2 caracteres");
+      setIsLoading(false);
+      return;
+    }
+
     if (password !== repeatPassword) {
-      setError("Passwords do not match");
+      setError("Senhas não correspondem");
       setIsLoading(false);
       return;
     }
@@ -45,12 +59,16 @@ export function SignUpForm({
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/protected`,
+          data: {
+            full_name: fullName.trim(),
+            company_name: companyName.trim(),
+          },
         },
       });
       if (error) throw error;
       router.push("/auth/sign-up-success");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
+      setError(error instanceof Error ? error.message : "Erro ao criar conta");
     } finally {
       setIsLoading(false);
     }
@@ -66,6 +84,30 @@ export function SignUpForm({
         <CardContent>
           <form onSubmit={handleSignUp}>
             <div className="flex flex-col gap-6">
+              <div className="grid gap-2">
+                <Label htmlFor="full-name">Seu nome</Label>
+                <Input
+                  id="full-name"
+                  type="text"
+                  placeholder="João Silva"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  minLength={2}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="company-name">Nome da empresa</Label>
+                <Input
+                  id="company-name"
+                  type="text"
+                  placeholder="Acme Inc"
+                  required
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  minLength={2}
+                />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input

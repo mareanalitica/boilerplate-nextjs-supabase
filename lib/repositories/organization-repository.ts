@@ -4,7 +4,7 @@
  */
 
 import { BaseRepository } from './base-repository'
-import { Organization } from '../state/types/organization-state'
+import type { Organization } from '../stores/organization-store'
 
 export interface OrganizationWithMembers extends Organization {
   membersCount?: number

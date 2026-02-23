@@ -23,3 +23,6 @@ export type { UsePreferencesReturn } from './use-preferences'
 export { useOnboarding } from './use-onboarding'
 export type { UseOnboardingReturn } from './use-onboarding'
 export { useOnboardingRedirect } from './use-onboarding-redirect'
+
+// UI Utilities
+export { useIsMobile } from '../../hooks/use-mobile'

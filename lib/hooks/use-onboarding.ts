@@ -6,9 +6,11 @@
 
 'use client'
 
-import { useCallback } from 'react'
-import { useOnboardingContext } from '../state/context/onboarding-context'
-import { OnboardingStep, OnboardingData } from '../state/types/onboarding-state'
+import {
+  useOnboardingStore,
+  OnboardingStep,
+  OnboardingData,
+} from '@/lib/stores/onboarding-store'
 
 export interface UseOnboardingReturn {
   // State
@@ -26,6 +28,8 @@ export interface UseOnboardingReturn {
   completeStep: (step: OnboardingStep, data?: OnboardingData) => void
   skipStep: (step: OnboardingStep) => void
   updateData: (data: OnboardingData) => void
+  /** Alias for updateData */
+  updateMetadata: (data: OnboardingData) => void
   setOrganizationId: (orgId: string) => void
   setPlan: (plan: string) => void
   completeOnboarding: () => void
@@ -35,73 +39,27 @@ export interface UseOnboardingReturn {
 }
 
 export function useOnboarding(): UseOnboardingReturn {
-  const context = useOnboardingContext()
-  const { state, dispatch } = context
-
-  const completeStep = useCallback(
-    (step: OnboardingStep, data?: OnboardingData) => {
-      if (data) {
-        dispatch({ type: 'UPDATE_DATA', payload: data })
-      }
-      dispatch({ type: 'MARK_STEP_COMPLETED', payload: step })
-    },
-    [dispatch]
-  )
-
-  const skipStep = useCallback(
-    (step: OnboardingStep) => {
-      dispatch({ type: 'SKIP_STEP', payload: step })
-    },
-    [dispatch]
-  )
-
-  const updateData = useCallback(
-    (data: OnboardingData) => {
-      dispatch({ type: 'UPDATE_DATA', payload: data })
-    },
-    [dispatch]
-  )
-
-  const setOrganizationId = useCallback(
-    (orgId: string) => {
-      dispatch({ type: 'SET_ORGANIZATION_ID', payload: orgId })
-    },
-    [dispatch]
-  )
-
-  const setPlan = useCallback(
-    (plan: string) => {
-      dispatch({ type: 'SET_PLAN', payload: plan })
-    },
-    [dispatch]
-  )
-
-  const completeOnboarding = useCallback(() => {
-    dispatch({ type: 'COMPLETE_ONBOARDING' })
-  }, [dispatch])
-
-  const clearError = useCallback(() => {
-    dispatch({ type: 'CLEAR_ERROR' })
-  }, [dispatch])
+  const store = useOnboardingStore()
 
   return {
-    status: state.status,
-    currentStep: state.current_step,
-    completedSteps: state.completed_steps,
-    data: state.data,
-    progress: context.getProgress(),
-    nextStep: context.getNextStep(),
-    isCompleted: context.isCompleted(),
-    isLoading: state.is_loading,
-    error: state.error || null,
-    completeStep,
-    skipStep,
-    updateData,
-    setOrganizationId,
-    setPlan,
-    completeOnboarding,
-    clearError,
-    getProgress: context.getProgress,
-    canSkip: context.canSkipStep,
+    status: store.status,
+    currentStep: store.currentStep,
+    completedSteps: store.completedSteps,
+    data: store.data,
+    progress: store.getProgress(),
+    nextStep: store.getNextStep(),
+    isCompleted: store.isCompleted(),
+    isLoading: store.isLoading,
+    error: store.error,
+    completeStep: store.completeStep,
+    skipStep: store.skipStep,
+    updateData: store.updateData,
+    updateMetadata: store.updateData,
+    setOrganizationId: store.setOrganizationId,
+    setPlan: store.setPlan,
+    completeOnboarding: store.completeOnboarding,
+    clearError: store.clearError,
+    getProgress: store.getProgress,
+    canSkip: store.canSkip,
   }
 }

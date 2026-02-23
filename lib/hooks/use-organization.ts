@@ -7,8 +7,11 @@
 'use client'
 
 import { useCallback } from 'react'
-import { useOrganizationContext } from '../state/context/organization-context'
-import { Organization, MemberRole } from '../state/types/organization-state'
+import {
+  useOrganizationStore,
+  Organization,
+  MemberRole,
+} from '@/lib/stores/organization-store'
 
 export interface UseOrganizationReturn {
   // State
@@ -32,54 +35,51 @@ export interface UseOrganizationReturn {
 }
 
 export function useOrganization(): UseOrganizationReturn {
-  const { state, dispatch } = useOrganizationContext()
+  const store = useOrganizationStore()
 
-  const canModifyOrg = useCallback((): boolean => {
-    return state.current_role === 'admin'
-  }, [state.current_role])
+  const canModifyOrg = useCallback(
+    (): boolean => store.currentRole === 'admin',
+    [store.currentRole],
+  )
 
-  const canInviteMembers = useCallback((): boolean => {
-    return state.current_role === 'admin'
-  }, [state.current_role])
+  const canInviteMembers = useCallback(
+    (): boolean => store.currentRole === 'admin',
+    [store.currentRole],
+  )
 
-  const canDeleteOrg = useCallback((): boolean => {
-    return state.current_role === 'admin'
-  }, [state.current_role])
+  const canDeleteOrg = useCallback(
+    (): boolean => store.currentRole === 'admin',
+    [store.currentRole],
+  )
 
-  const isAdmin = useCallback((): boolean => {
-    return state.current_role === 'admin'
-  }, [state.current_role])
+  const isAdmin = useCallback(
+    (): boolean => store.currentRole === 'admin',
+    [store.currentRole],
+  )
 
   const setCurrentOrganization = useCallback(
     (orgId: string) => {
-      const org = state.organizations_list.find((o) => o.id === orgId)
+      const org = store.organizationsList.find((o) => o.id === orgId)
       if (org) {
-        dispatch({
-          type: 'SET_CURRENT_ORGANIZATION',
-          payload: org,
-        })
+        store.setCurrentOrganization(org)
       }
     },
-    [state.organizations_list, dispatch]
+    [store],
   )
 
-  const clearError = useCallback(() => {
-    dispatch({ type: 'CLEAR_ERROR' })
-  }, [dispatch])
-
   return {
-    currentOrganizationId: state.current_organization_id,
-    currentOrganization: state.current_organization,
-    currentRole: state.current_role,
-    currentPlan: state.current_plan,
-    organizationsList: state.organizations_list,
-    isLoading: state.is_loading,
-    error: state.error || null,
+    currentOrganizationId: store.currentOrganizationId,
+    currentOrganization: store.currentOrganization,
+    currentRole: store.currentRole,
+    currentPlan: store.currentPlan,
+    organizationsList: store.organizationsList,
+    isLoading: store.isLoading,
+    error: store.error,
     canModifyOrg,
     canInviteMembers,
     canDeleteOrg,
     isAdmin,
     setCurrentOrganization,
-    clearError,
+    clearError: store.clearError,
   }
 }

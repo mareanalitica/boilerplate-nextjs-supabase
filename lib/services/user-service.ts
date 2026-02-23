@@ -5,7 +5,7 @@
 
 import { BaseService, ValidationResult, ValidationError } from './base-service'
 import { UserRepository } from '../repositories/user-repository'
-import { User } from '../state/types/auth-state'
+import type { AuthUser as User } from '../stores/auth-store'
 import { UserValidator } from '../validators/user-validator'
 
 export class UserService extends BaseService<User> {

@@ -6,9 +6,10 @@
 
 'use client'
 
-import { useCallback } from 'react'
-import { usePermissionsContext } from '../state/context/permissions-context'
-import { Permission } from '../state/types/permissions-state'
+import {
+  usePermissionsStore,
+  Permission,
+} from '@/lib/stores/permissions-store'
 
 export interface UsePermissionsReturn {
   // State
@@ -27,22 +28,18 @@ export interface UsePermissionsReturn {
 }
 
 export function usePermissions(): UsePermissionsReturn {
-  const context = usePermissionsContext()
-
-  const clearError = useCallback(() => {
-    context.dispatch({ type: 'CLEAR_ERROR' })
-  }, [context])
+  const store = usePermissionsStore()
 
   return {
-    userPermissions: context.state.user_permissions,
-    userRoles: context.state.user_roles,
-    orgPermissions: context.state.org_permissions,
-    isLoading: context.state.is_loading,
-    error: context.state.error || null,
-    hasPermission: context.hasPermission,
-    hasRole: context.hasRole,
-    canAction: context.canAction,
-    isFeatureEnabled: context.isFeatureEnabled,
-    clearError,
+    userPermissions: store.userPermissions,
+    userRoles: store.userRoles,
+    orgPermissions: store.orgPermissions,
+    isLoading: store.isLoading,
+    error: store.error,
+    hasPermission: store.hasPermission,
+    hasRole: store.hasRole,
+    canAction: store.canAction,
+    isFeatureEnabled: store.isFeatureEnabled,
+    clearError: store.clearError,
   }
 }

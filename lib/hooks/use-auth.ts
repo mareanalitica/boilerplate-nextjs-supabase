@@ -8,12 +8,11 @@
 
 import { useCallback } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
-import { useAuthContext } from '../state/context/auth-context'
-import { AuthState, User } from '../state/types/auth-state'
+import { useAuthStore, AuthUser } from '@/lib/stores/auth-store'
 
 export interface UseAuthReturn {
   // State
-  user: User | null
+  user: AuthUser | null
   userId: string | null
   email: string | null
   isAuthenticated: boolean
@@ -26,7 +25,7 @@ export interface UseAuthReturn {
 }
 
 export function useAuth(): UseAuthReturn {
-  const { state, dispatch } = useAuthContext()
+  const store = useAuthStore()
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -39,27 +38,23 @@ export function useAuth(): UseAuthReturn {
 
   const logout = useCallback(async () => {
     try {
-      dispatch({ type: 'SET_LOADING', payload: true })
+      store.setLoading(true)
       await supabase.auth.signOut()
-      dispatch({ type: 'LOGOUT' })
+      store.logout()
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Logout failed'
-      dispatch({ type: 'SET_ERROR', payload: message })
+      store.setError(message)
     }
-  }, [supabase, dispatch])
-
-  const clearError = useCallback(() => {
-    dispatch({ type: 'CLEAR_ERROR' })
-  }, [dispatch])
+  }, [supabase, store])
 
   return {
-    user: state.user,
-    userId: state.user_id,
-    email: state.email,
-    isAuthenticated: state.is_authenticated,
-    isLoading: state.is_loading,
-    error: state.error || null,
+    user: store.user,
+    userId: store.userId,
+    email: store.email,
+    isAuthenticated: store.isAuthenticated,
+    isLoading: store.isLoading,
+    error: store.error,
     logout,
-    clearError,
+    clearError: store.clearError,
   }
 }

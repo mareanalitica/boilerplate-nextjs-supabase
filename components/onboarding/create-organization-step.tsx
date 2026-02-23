@@ -9,6 +9,7 @@ import { useState } from 'react'
 import { useAuth } from '@/lib/hooks'
 import { useOnboarding } from '@/lib/hooks'
 import { getOrganizationService } from '@/lib/services'
+import { useOrganizationStore } from '@/lib/stores/organization-store'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -23,12 +24,13 @@ export function CreateOrganizationStep({
   onNext,
   onPrevious,
 }: CreateOrganizationStepProps) {
-  const { userId } = useAuth()
+  const { userId, user } = useAuth()
   const { completeStep, updateMetadata } = useOnboarding()
+  const { addOrganization, setCurrentOrganization } = useOrganizationStore()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
-    name: '',
+    name: (user?.user_metadata?.company_name as string) || '',
     logo_url: '',
   })
 
@@ -53,6 +55,10 @@ export function CreateOrganizationStep({
         organizationId: org.id,
         organizationName: org.name,
       })
+
+      // Update organization store
+      addOrganization(org)
+      setCurrentOrganization(org, 'admin')
 
       await completeStep('create_organization')
       setTimeout(() => onNext?.(), 500)

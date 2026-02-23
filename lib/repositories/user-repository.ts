@@ -4,7 +4,7 @@
  */
 
 import { BaseRepository } from './base-repository'
-import { User } from '../state/types/auth-state'
+import type { AuthUser as User } from '../stores/auth-store'
 
 export class UserRepository extends BaseRepository<User> {
   protected tableName = 'auth.users'

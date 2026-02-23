@@ -4,7 +4,7 @@
  */
 
 import { BaseValidator } from './base-validator'
-import { Organization } from '../state/types/organization-state'
+import type { Organization } from '../stores/organization-store'
 
 export class OrganizationValidator extends BaseValidator<Organization> {
   defineRules(): void {

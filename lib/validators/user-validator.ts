@@ -4,7 +4,7 @@
  */
 
 import { BaseValidator } from './base-validator'
-import { User } from '../state/types/auth-state'
+import type { AuthUser as User } from '../stores/auth-store'
 
 export class UserValidator extends BaseValidator<User> {
   defineRules(): void {
