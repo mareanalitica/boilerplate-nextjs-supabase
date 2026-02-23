@@ -587,6 +587,18 @@ BEGIN
   VALUES (NEW.id, 'verify_email', 'not_started')
   ON CONFLICT (user_id) DO NOTHING;
 
+  -- Criar organização padrão se company_name foi fornecido no sign-up
+  IF NEW.raw_user_meta_data->>'company_name' IS NOT NULL
+     AND NEW.raw_user_meta_data->>'company_name' != '' THEN
+    INSERT INTO public.organizations (owner_id, name, plan)
+    VALUES (
+      NEW.id,
+      NEW.raw_user_meta_data->>'company_name',
+      'free'
+    )
+    ON CONFLICT DO NOTHING;
+  END IF;
+
   RETURN NEW;
 END;
 $$;
